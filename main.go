@@ -7,19 +7,27 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
+
+type Problem struct {
+	question string
+	answer   string
+}
 
 // DefaultFile indicates the default filepath containing problems.
 // If user specifies a different filepath via arguments, this will be overriden.
 const DefaultFile = "./problems.csv"
 
 var filePath string
-var problems []string
+var problems []Problem
+var score int
 
 func main() {
 
 	parseArguments()
 	readProblems()
+	startQuiz()
 
 }
 
@@ -49,6 +57,23 @@ func readProblems() {
 			break
 		}
 
-		problems = append(record)
+		problems = append(problems, Problem{record[0], record[1]})
+	}
+}
+
+func startQuiz() {
+	reader := bufio.NewReader(os.Stdin)
+
+	for i := 0; i < len(problems); i++ {
+		fmt.Printf("Problem #%d: %-4s= ? ", i+1, problems[i].question)
+		answer, _ := reader.ReadString('\n')
+		answer = strings.Replace(answer, "\n", "", -1)
+
+		if answer == problems[i].answer {
+			score++
+		} else {
+			fmt.Printf("You scored %d out of %d", score, len(problems))
+			break
+		}
 	}
 }
