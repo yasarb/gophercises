@@ -14,23 +14,12 @@ import (
 const DefaultFile = "./problems.csv"
 
 var filePath string
+var problems []string
 
 func main() {
 
 	parseArguments()
-
-	f, _ := os.Open(filePath)
-	r := csv.NewReader(bufio.NewReader(f))
-
-	for {
-		record, err := r.Read()
-
-		if err == io.EOF {
-			break
-		}
-
-		fmt.Println(record)
-	}
+	readProblems()
 
 }
 
@@ -45,5 +34,21 @@ func parseArguments() {
 			os.Exit(1)
 		}
 		filePath = DefaultFile
+	}
+}
+
+func readProblems() {
+	f, _ := os.Open(filePath)
+	r := csv.NewReader(bufio.NewReader(f))
+	defer f.Close()
+
+	for {
+		record, err := r.Read()
+
+		if err == io.EOF {
+			break
+		}
+
+		problems = append(record)
 	}
 }
