@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
 )
 
 type Problem struct {
@@ -67,6 +68,10 @@ func readProblems() {
 }
 
 func startQuiz() {
+
+	timer := time.NewTimer(time.Duration(timeLimit) * time.Second)
+	go onTimerExpired(timer)
+
 	reader := bufio.NewReader(os.Stdin)
 
 	for i := 0; i < len(problems); i++ {
@@ -78,9 +83,19 @@ func startQuiz() {
 			score++
 		} else {
 			fmt.Printf("You scored %d out of %d", score, len(problems))
-			break
+			timer.Stop()
+			os.Exit(1)
 		}
 	}
 
 	fmt.Printf("Perfect! You scored %d out of %d", score, len(problems))
+	timer.Stop()
+}
+
+func onTimerExpired(timer *time.Timer) {
+	func() {
+		<-timer.C
+		fmt.Printf("\nYou scored %d out of %d\n", score, len(problems))
+		os.Exit(1)
+	}()
 }
