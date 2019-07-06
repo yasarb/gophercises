@@ -76,4 +76,6 @@ func startQuiz() {
 			break
 		}
 	}
+
+	fmt.Printf("Perfect! You scored %d out of %d", score, len(problems))
 }
