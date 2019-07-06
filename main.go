@@ -19,7 +19,11 @@ type Problem struct {
 // If user specifies a different filepath via arguments, this will be overriden.
 const DefaultFile = "./problems.csv"
 
+// Time limit for a quiz in seconds
+const DefaultTimeLimit = 30
+
 var filePath string
+var timeLimit int
 var problems []Problem
 var score int
 
@@ -32,7 +36,8 @@ func main() {
 }
 
 func parseArguments() {
-	flag.StringVar(&filePath, "file", "", "path of CSV file containing problems. (default: \"./problems.csv\")")
+	flag.StringVar(&filePath, "file", DefaultFile, "Path of CSV file containing problems")
+	flag.IntVar(&timeLimit, "limit", DefaultTimeLimit, "Time limit for a quiz in seconds")
 	flag.Parse()
 
 	if filePath == "" {
