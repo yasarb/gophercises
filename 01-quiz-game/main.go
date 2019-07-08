@@ -1,4 +1,4 @@
-package _1_quiz_game
+package main
 
 import (
 	"bufio"
